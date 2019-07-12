@@ -12,13 +12,13 @@ class Button extends React.Component {
     render() {
         const cx = classNames.bind(styles);
         const {children, to, disabled, onClick, theme = "default"} = this.props;
-        const buttonTag = (!to || disabled ? Div : ReactRouterDom.Link);
+        const ButtonTag = (!to || disabled ? Div : ReactRouterDom.Link);
 
         return (
-            <buttonTag
+            <ButtonTag
                 className={cx("custom-button", theme, {disabled})}
                 to={to}
-                onClick={disabled ? () => null : onClick}>{children}</buttonTag>
+                onClick={disabled ? () => null : onClick}>{children}</ButtonTag>
         );
     }
 }
