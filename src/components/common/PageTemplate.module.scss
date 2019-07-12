@@ -1,0 +1,8 @@
+@import "../../styles/utils.module.scss";
+
+.page-template {
+    main {
+        background-color : $oc-gray-1;
+        min-height : calc(100vh - 15rem);
+    }
+}

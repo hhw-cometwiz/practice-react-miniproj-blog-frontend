@@ -1,0 +1,28 @@
+@import "../../styles/utils.module.scss";
+
+.page-footer {
+    background-color : $oc-gray-7;
+    height : 10rem;
+
+    display : flex;
+    align-items : center;
+    justify-content : center;
+    flex-direction : column;
+
+    .logo {
+        color : white;
+        font-size : 2rem;
+        font-weight : 600;
+    }
+
+    .sign-in {
+        margin-top : 0.5rem;
+        font-weight : 600;
+        font-size : 0.8rem;
+        color : rgba(255, 255, 255, 0.8);
+        cursor : pointer;
+        &:hover {
+            color : white;
+        }
+    }
+}
