@@ -1,0 +1,21 @@
+@import "../../../styles/utils.module.scss";
+
+.yes-no-dialog {
+    background-color : white;
+    padding : 2rem;
+
+    .title {
+        font-size : 1.25rem;
+        font-weight : 500;
+    }
+
+    .message {
+        margin-top : 0.25rem;
+    }
+
+    .options {
+        background-color : $oc-gray-1;
+        padding : 1rem;
+        text-align : right;
+    }
+}

@@ -1,7 +1,7 @@
-import React from "react";
-import * as ReactRouterDom from "react-router-dom";
-import classNames from "classnames/bind";
-import styles from "./Button.module.scss";
+const React = require("react");
+const ReactRouterDom = require("react-router-dom");
+const classNames = require("classnames/bind");
+const styles = require("./Button.module.scss");
 
 //A wrapper of HTML div tag.
 const Div = ({children, ...rest}) => (

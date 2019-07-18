@@ -1,9 +1,13 @@
 import React from "react";
+import PostContainer from "../containers/post/PostContainer";
 
 class Post extends React.Component {
     render() {
+        const {match} = this.props;
+
         return (
-            <div>post page</div>
+            <PostContainer
+                postId={match.params.postId} />
         );
     }
 }

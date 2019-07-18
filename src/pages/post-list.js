@@ -1,16 +1,10 @@
 import React from "react";
-import UiPageTemplate from "../components/common/PageTemplate"
-import UiPostListWrapper from "../components/post-list/PostListWrapper";
-import UiPostList from "../components/post-list/PostList";
+import PostListWrapperContainer from "../containers/post-list/PostListWrapperContainer";
 
 class PostList extends React.Component {
     render() {
         return (
-            <UiPageTemplate>
-                <UiPostListWrapper>
-                    <UiPostList />
-                </UiPostListWrapper>
-            </UiPageTemplate>
+            <PostListWrapperContainer />
         );
     }
 }

@@ -1,9 +1,13 @@
-import React from "react";
+const React = require("react");
+const PostEditorContainer = require("../containers/post-editor/PostEditorContainer").default;
 
 class PostEditor extends React.Component {
     render() {
+        const {postId} = this.props.match.params;
+        
         return (
-            <div>post editor page</div>
+            <PostEditorContainer
+                postId={postId} />
         );
     }
 }

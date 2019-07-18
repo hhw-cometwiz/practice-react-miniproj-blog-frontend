@@ -1,19 +1,31 @@
-import React from "react";
-import classNames from "classnames/bind";
-import styles from "./PostListItem.module.scss";
+const React = require("react");
+const classNames = require("classnames/bind");
+const styles = require("./PostListItem.module.scss");
+const removeMarkdown = require("remove-markdown");
 
 const cx = classNames.bind(styles);
 
 class PostListItem extends React.Component {
     render() {
-        const {title, publishedDate, content, tags} = this.props;
-
+        const {
+            post,
+            pagePathGenerator = () => "#",
+            pageListPathGenerator = () => "#",
+            page, pageCount, contentLength
+        } = this.props;
+        
         return (
             <li className={cx("post-list-item")}>
-                <h2><a>{title}</a></h2>
-                <h3 className={cx("date")}>{publishedDate}</h3>
-                <div className={cx("content")}>{content}</div>
-                <div className={cx("tags")}>{tags && Array.from(tags).map((tag, index) => (<a key={index}>&#x23;{tag}</a>))}</div>
+                <h2><a href={pagePathGenerator(post.postId, page, pageCount, contentLength, post.tags)}>{post.title}</a></h2>
+                <h3 className={cx("date")}>{post.publishedDate}</h3>
+                <div className={cx("content")}>{removeMarkdown(post.content)}</div>
+                <div className={cx("tags")}>{
+                    post.tags && Array.from(post.tags).map(
+                        (tag, index) => (
+                            <a key={index} href={pageListPathGenerator(1, pageCount, contentLength, tag)}>&#x23;{tag}</a>
+                        )
+                    )
+                }</div>
             </li>
         );
     }

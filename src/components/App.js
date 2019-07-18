@@ -1,7 +1,7 @@
-import React from "react";
-import * as ReactRouterDom from "react-router-dom";
-import * as pages from "../pages/pages";
-import PageTemplate from "./common/PageTemplate";
+const React = require("react");
+const ReactRouterDom = require("react-router-dom");
+const pages = require("../pages/pages");
+const GlobalComponentContainer = require("../containers/common/GlobalComponentContainer").default;
 
 class App extends React.Component {
     render() {
@@ -18,11 +18,12 @@ class App extends React.Component {
                         path="/post/:postId"
                         component={pages.Post} />
                     <ReactRouterDom.Route
-                        path="/editor"
+                        path="/editor/:postId?"
                         component={pages.PostEditor} />
                     <ReactRouterDom.Route
                         component={pages.ErrorReport}/>
                 </ReactRouterDom.Switch>
+                <GlobalComponentContainer />
             </div>
         );
     }
