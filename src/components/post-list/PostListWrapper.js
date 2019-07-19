@@ -38,8 +38,10 @@ class PostListWrapper extends React.Component {
                     tags : this.props.tags
                 }
             );
-
-            document.documentElement.scrollTop = 0;
+            
+            if(document) {
+                document.documentElement.scrollTop = 0;
+            }
         }
     }
     

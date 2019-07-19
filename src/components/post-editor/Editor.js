@@ -1,18 +1,22 @@
-import CodeMirror from "codemirror";
-import "codemirror/mode/markdown/markdown";
-import "codemirror/mode/javascript/javascript";
-import "codemirror/mode/jsx/jsx";
-import "codemirror/mode/css/css";
-import "codemirror/mode/shell/shell";
-
-import "codemirror/lib/codemirror.css";
-import "codemirror/theme/monokai.css";
-
+const {isBrowser} = require("browser-or-node");
 const React = require("react");
 const classNames = require("classnames/bind");
 const styles = require("./Editor.module.scss");
 
 const cx = classNames.bind(styles);
+
+let CodeMirror = null;
+if(isBrowser) {
+    CodeMirror = require("codemirror");
+    require("codemirror/mode/markdown/markdown");
+    require("codemirror/mode/javascript/javascript");
+    require("codemirror/mode/jsx/jsx");
+    require("codemirror/mode/css/css");
+    require("codemirror/mode/shell/shell");
+
+    require("codemirror/lib/codemirror.css");
+    require("codemirror/theme/monokai.css");
+}
 
 class Editor extends React.Component {
     constructor(props) {
@@ -119,7 +123,7 @@ class Editor extends React.Component {
      * @private
      */
     _initializeCodeMirror() {
-        this._codeMirror = CodeMirror(
+        this._codeMirror = CodeMirror && CodeMirror(
             this._editor,
             {
                 mode : "markdown",
@@ -128,7 +132,9 @@ class Editor extends React.Component {
                 lineWrapping : false
             }
         );
-        this._codeMirror.on("change", this._onCodeMirrorChange);
+        if(this._codeMirror) {
+            this._codeMirror.on("change", this._onCodeMirrorChange);
+        }
 
         this._updateCodeMirror("");
     }

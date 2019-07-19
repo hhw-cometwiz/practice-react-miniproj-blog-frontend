@@ -1,13 +1,18 @@
+const {isBrowser} = require("browser-or-node");
 const React = require("react");
 const marked = require("marked");
 const classNames = require("classnames/bind");
 const styles = require("./MarkdownRenderer.module.scss");
-const Prism = require("prismjs");
-require("prismjs/themes/prism-okaidia.css");
-require("prismjs/components/prism-bash.min.js");
-require("prismjs/components/prism-javascript.min.js");
-require("prismjs/components/prism-jsx.min.js");
-require("prismjs/components/prism-css.min.js");
+
+let Prism = null;
+if(isBrowser) {
+    Prism = require("prismjs");
+    require("prismjs/themes/prism-okaidia.css");
+    require("prismjs/components/prism-bash.min.js");
+    require("prismjs/components/prism-javascript.min.js");
+    require("prismjs/components/prism-jsx.min.js");
+    require("prismjs/components/prism-css.min.js");
+}
 
 class MarkdownRenderer extends React.Component {
     constructor(props) {
@@ -70,7 +75,7 @@ class MarkdownRenderer extends React.Component {
      */
     _highlightMarkdown() {
         if(this._root) {
-                Prism.highlightAllUnder(this._root);
+            Prism && Prism.highlightAllUnder(this._root);
         }
     }
 }

@@ -61,8 +61,8 @@ class Template extends React.Component {
      * @param {MouseEvent} e 
      */
     onSeparatorMouseDown = (e) => {
-        document.body.addEventListener("mousemove", this.onSeparatorMouseMove);
-        window.addEventListener("mouseup", this.onSeparatorMouseUp);
+        document && document.body.addEventListener("mousemove", this.onSeparatorMouseMove);
+        window && window.addEventListener("mouseup", this.onSeparatorMouseUp);
     }
 
     /**
@@ -70,8 +70,8 @@ class Template extends React.Component {
      * @param {MouseEvent} e 
      */
     onSeparatorMouseUp = (e) => {
-        document.body.removeEventListener("mousemove", this.onSeparatorMouseMove);
-        window.removeEventListener("mouseup", this.onSeparatorMouseUp);
+        document && document.body.removeEventListener("mousemove", this.onSeparatorMouseMove);
+        window && window.removeEventListener("mouseup", this.onSeparatorMouseUp);
     }
 
     /**
@@ -79,7 +79,11 @@ class Template extends React.Component {
      * @param {MouseEvent} e 
      */
     onSeparatorMouseMove = (e) => {
-        this.leftRatio = (window.innerWidth > 0 ? e.clientX / window.innerWidth : 0);
+        this.leftRatio = (
+            window
+            ? (window.innerWidth > 0 ? e.clientX / window.innerWidth : 0)
+            : 0.5
+        );
     }
 }
 

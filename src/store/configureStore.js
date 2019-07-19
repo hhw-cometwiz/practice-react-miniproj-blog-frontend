@@ -10,7 +10,10 @@ const enhancers = [
     Redux.applyMiddleware(...middlewares)
 ];
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || Redux.compose;
+let composeEnhancers = Redux.compose;
+if("object" === typeof window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
+    composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+}
 
 function configureStore(preloadedState) {
     return Redux.createStore(
