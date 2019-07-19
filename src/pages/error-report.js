@@ -1,4 +1,4 @@
-import React from "react";
+const React = require("react");
 
 class ErrorReport extends React.Component {
     render() {

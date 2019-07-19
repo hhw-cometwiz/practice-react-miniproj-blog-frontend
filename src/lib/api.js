@@ -10,13 +10,13 @@ const Api = function () {};
  * @memberof {Api}
  * @constant
  */
-Api.authApiBasePath = "/auth";
+Api.authApiBasePath = "/api/auth";
 
 /**
  * @memberof {Api}
  * @constant
  */
-Api.postApiBasePath = "/posts";
+Api.postApiBasePath = "/api/posts";
 
 /**
  * 
@@ -80,6 +80,8 @@ Api.prototype.readPostById = function (postId) {
  * @param {Array.<string>} tags
  */
 Api.prototype.getPostList = function (page, pageCount, contentLength, tags) {
+    console.log("getPostList");
+
     pageCount = Number.parseInt(pageCount);
     if(!Number.isSafeInteger(pageCount) || pageCount < 0) {
         pageCount = 0;

@@ -3,12 +3,48 @@ const ReactDOMServer = require("react-dom/server");
 const ReactRouter = require("react-router");
 const ReactRedux = require("react-redux");
 const configureStore = require("./store/configureStore");
-const App = require("./components/App");
+const Axios = require("axios").default;
+const transit = require("transit-immutable-js");
+const {routeSettings} = require("./route-settings");
+const App = require("./components/App").default;
 
-const render = (ctx) => {
-    const {url} = ctx;
+export const render = async (ctx) => {
+    console.log(ctx);
+    const {url, query, origin} = ctx;
+
+    Axios.defaults.baseURL = origin;
 
     const store = configureStore();
+    
+    const promises = [];
+    routeSettings.forEach(
+        (setting) => {
+            let urlWithoutQueryString = url;
+            const queryStringIndex = url.lastIndexOf('?' + ctx.querystring);
+            if(queryStringIndex >= 0) {
+                urlWithoutQueryString = url.slice(0, queryStringIndex);
+            }
+            
+            const match = ReactRouter.matchPath(urlWithoutQueryString, setting);
+            if(match) {
+                const {component: Component} = setting;
+
+                if("function" === typeof Component.preload) {
+                    const {params} = match;
+
+                    const promise = Component.preload(store.dispatch, params, query);
+
+                    promises.push(promise);
+                }
+            }
+        }
+    );
+    try {
+        await Promise.all(promises);
+    }
+    catch(e) {
+
+    }
 
     const html = ReactDOMServer.renderToString(
         <ReactRedux.Provider
@@ -20,7 +56,15 @@ const render = (ctx) => {
         </ReactRedux.Provider>
     );
 
-    return html;
-};
+    const preloadedState = 
+        JSON.stringify(
+            transit.toJSON(store.getState())
+        )
+        .replace(/\</g, "\\u003c")
+    ;
 
-module.exports = render;
+    return ({
+        html : html,
+        preloadedState : preloadedState
+    });
+};

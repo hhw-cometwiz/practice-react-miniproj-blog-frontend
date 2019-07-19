@@ -1,6 +1,6 @@
-import * as Redux from "redux";
-import * as ReduxPender from "redux-pender";
-import * as modules from "./modules/modules";
+const Redux = require("redux");
+const ReduxPender = require("redux-pender");
+const modules = require("./modules/modules");
 
 const rootReducer = Redux.combineReducers(modules);
 const middlewares = [
@@ -23,4 +23,4 @@ function configureStore(preloadedState) {
     );
 }
 
-export default configureStore;
+module.exports = configureStore;

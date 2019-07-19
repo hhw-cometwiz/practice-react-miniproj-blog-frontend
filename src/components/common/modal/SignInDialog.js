@@ -8,7 +8,7 @@ const cx = classNames.bind(styles);
 class SignInDialog extends React.Component {
     render() {
         const {
-            isVisible, isSignedIn = false, isSignInFailed = false
+            isVisible, isSignInFailed = false
         } = this.props;
 
         return (

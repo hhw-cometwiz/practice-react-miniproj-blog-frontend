@@ -1,5 +1,3 @@
-import PostEditor from "../../components/post-editor/PostEditor";
-
 const React = require("react");
 const ReactRouter = require("react-router");
 const ReactRedux = require("react-redux");
