@@ -25,6 +25,7 @@ const getClientEnvironment = require('./env');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('react-dev-utils/ForkTsCheckerWebpackPlugin');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
+const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
 
 const postcssNormalize = require('postcss-normalize');
 
@@ -46,6 +47,8 @@ const sassModuleRegex = /\.module\.(scss|sass)$/;
 // This is the production and development configuration.
 // It is focused on developer experience, fast rebuilds, and a minimal bundle.
 module.exports = function(webpackEnv) {
+  const contentHashLength = 12;
+
   const isEnvDevelopment = webpackEnv === 'development';
   const isEnvProduction = webpackEnv === 'production';
 
@@ -154,14 +157,16 @@ module.exports = function(webpackEnv) {
       pathinfo: isEnvDevelopment,
       // There will be one main bundle, and one file per asynchronous chunk.
       // In development, it does not produce real files.
+      // filename: "static/js/[name].js",
       filename: isEnvProduction
-        ? 'static/js/[name].[contenthash:8].js'
+        ? `static/js/[name].[contenthash:${contentHashLength}].js`
         : isEnvDevelopment && 'static/js/bundle.js',
       // TODO: remove this when upgrading to webpack 5
       futureEmitAssets: true,
       // There are also additional JS chunk files if you use code splitting.
+      // chunkFilename: 'static/js/[name].chunk.js',
       chunkFilename: isEnvProduction
-        ? 'static/js/[name].[contenthash:8].chunk.js'
+        ? `static/js/[name].[contenthash:${contentHashLength}].chunk.js`
         : isEnvDevelopment && 'static/js/[name].chunk.js',
       // We inferred the "public path" (such as / or /my-project) from homepage.
       // We use "/" in development.
@@ -244,8 +249,23 @@ module.exports = function(webpackEnv) {
       // https://twitter.com/wSokra/status/969633336732905474
       // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
       splitChunks: {
-        chunks: 'all',
-        name: false,
+        cacheGroups: {
+          node_modules$react_redux: {
+            test: /[\\/]node_modules[\\/](.*(react|redux|immutable).*)[\\/]/,
+            chunks: "all",
+            priority: 8
+          },
+          node_modules$the_others: {
+            test: /[\\/]node_modules[\\/]/,
+            chunks: "all",
+            priority: 7
+          },
+          default: {
+            reuseExistingChunk: true
+          }
+        },
+        // chunks: 'all',
+        name: true,
       },
       // Keep the runtime chunk separated to enable long term caching
       // https://twitter.com/wSokra/status/969679223278505985
@@ -538,8 +558,10 @@ module.exports = function(webpackEnv) {
         new MiniCssExtractPlugin({
           // Options similar to the same options in webpackOptions.output
           // both options are optional
-          filename: 'static/css/[name].[contenthash:8].css',
-          chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
+          // filename: 'static/css/[name].[contenthash:8].css',
+          // chunkFilename: 'static/css/[name].[contenthash:8].chunk.css',
+          filename: `static/css/[name].[contenthash:${contentHashLength}].css`,
+          chunkFilename: `static/css/[name].[contenthash:${contentHashLength}].chunk.css`,
         }),
       // Generate a manifest file which contains a mapping of all asset filenames
       // to their corresponding output file so that tools can pick it up without
@@ -547,6 +569,15 @@ module.exports = function(webpackEnv) {
       new ManifestPlugin({
         fileName: 'asset-manifest.json',
         publicPath: publicPath,
+        map: function (file) {
+            console.log("ManifestPlugin", file.name);
+            if(isEnvProduction) {
+                // Remove hashes from keys created in CopyWebpackPlugin which does not correctly support manifest files
+                var regex = new RegExp(`(\\.[a-f0-9]{${contentHashLength}}[a-f0-9]*)(\\..*)$`);
+                file.name = file.name.replace(regex, "$2");
+            }
+            return file;
+        },
         generate: (seed, files) => {
           const manifestFiles = files.reduce(function(manifest, file) {
             manifest[file.name] = file.path;
@@ -608,6 +639,9 @@ module.exports = function(webpackEnv) {
           // The formatter is invoked directly in WebpackDevServerUtils during development
           formatter: isEnvProduction ? typescriptFormatter : undefined,
         }),
+      new BundleAnalyzerPlugin({
+        analyzerMode: "static"
+      }),
     ].filter(Boolean),
     // Some libraries import Node modules but don't use them in the browser.
     // Tell Webpack to provide empty mocks for them so importing them works.

@@ -1,6 +1,26 @@
+var {isBrowser} = require("browser-or-node");
 var queryString = require("query-string");
 
-var AppUtils = function () {}
+let shouldRenderFlag = true;
+
+/**
+ * @class
+ */
+var AppUtils = function () {
+    shouldRenderFlag = !this.isServerSideRenderingPerformed();
+}
+
+AppUtils.prototype.shouldRender = function () {
+    return shouldRenderFlag;
+}
+
+AppUtils.prototype.preventRendering = function () {
+    shouldRenderFlag = false;
+}
+
+AppUtils.prototype.isServerSideRenderingPerformed = function () {
+    return isBrowser && "undefined" !== typeof window.__PRELOADED_STATE__;
+};
 
 AppUtils.prototype.toCssRgbaColorText = function (arg) {
     let rgbaColor = 0xFF;
